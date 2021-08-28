@@ -181,5 +181,18 @@ describe("API tests", () => {
         });
       done();
     });
+
+    it("should return SQL Injection error while finding ride", (done) => {
+      request(app)
+        .get("/rides/1 OR 2")
+        .expect("Content-Type", /json/)
+        .expect(200)
+        .end((err, res) => {
+          const body = res.body;
+          if (err) done(err);
+          else if (body.rideID) done("Found unexpected ride");
+        });
+      done();
+    });
   });
 });
