@@ -12,7 +12,7 @@
     "coverage": "nyc npm run test"
   },
   "pre-push": [
-    "test"
+    "coverage"
   ],
   "keywords": [
     "Xendit"
