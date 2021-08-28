@@ -14,8 +14,10 @@ The goal of this project is to store and provide information about rides. There 
       3. Returns:
           - Created entry from db.
   2. GET '/rides'
-      1. Returns:
-          - All entries from db.
+      1. Parameters query:
+          - page, size
+      2. Returns:
+          - Entries from db with count equal size param. Pagination included and specify with page param.
   3. GET '/rides/:id'
       1. Parameters:
           - id

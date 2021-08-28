@@ -88,7 +88,8 @@ module.exports = (db) => {
     });
 
     app.get("/rides", (req, res) => {
-        db.all("SELECT * FROM Rides", function (err, rows) {
+      const { page = 1, size = 5 } = req.query;
+        db.all("SELECT * FROM Rides LIMIT ?,?", [(page - 1) * size, size], function (err, rows) {
             if (err) {
                 return res.send({
                     error_code: "SERVER_ERROR",
