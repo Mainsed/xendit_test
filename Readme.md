@@ -1,3 +1,26 @@
+# Documentation
+The goal of this project is to store and provide information about rides. There is information about start and end latitude/longtitude, rider and driver name, and driver vehicle.
+
+## Routes:
+  1. POST '/rides'
+      1. Parameters in body:
+          - startLatitude, startLongitude, endLatitude, endLongitude, riderName, redriverName, driverVehicle.
+      2. Validation:
+          - startLatitude and longitude must be between -90 - 90 and -180 to 180 degrees respectively.
+          - endLatitude endLongitude must be between -90 - 90 and -180 to 180 degrees respectively.
+          - riderName must be a non empty string.
+          - driverName must be a non empty string.
+          - driverVehicle must be a non empty string.
+      3. Returns:
+          - Created entry from db.
+  2. GET '/rides'
+      1. Returns:
+          - All entries from db.
+  3. GET '/rides/:id'
+      1. Parameters:
+          - id
+      2. Returns:
+          - Entry from db with specified id.
 # Xendit Coding Exercise
 
 The goal of these exercises are to assess your proficiency in software engineering that is related to the daily work that we do at Xendit. Please follow the instructions below to complete the assessment.
