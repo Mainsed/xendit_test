@@ -2,6 +2,17 @@
 
 const dbService = require("./db.service");
 
+const injectionCheck = (params) => {
+  if (params.length === 0)
+    throw new Error("Params should be not empty array");
+  params.forEach((param) => {
+    if (param.toString().includes("or") || param.toString().includes("OR") ||
+      param.toString().includes("and") || param.toString().includes("AND"))
+      throw new Error("Found SQL Injection");
+  });
+  return true;
+};
+
 module.exports = (db, logger) => {
   return {
     createRide: async (req, res) => {
@@ -50,9 +61,11 @@ module.exports = (db, logger) => {
 
       const values = [req.body.start_lat, req.body.start_long, req.body.end_lat, req.body.end_long, req.body.rider_name, req.body.driver_name, req.body.driver_vehicle];
       try {
-        const insert = await dbService.run("INSERT INTO Rides(startLat, startLong, endLat, endLong, riderName, driverName, driverVehicle) VALUES (?, ?, ?, ?, ?, ?, ?)", db, values);
-        const ride = await dbService.get("SELECT * FROM Rides WHERE rideID = ?", db, insert.lastID);
-        res.send(ride);
+        if (injectionCheck(values)) {
+          const insert = await dbService.run("INSERT INTO Rides(startLat, startLong, endLat, endLong, riderName, driverName, driverVehicle) VALUES (?, ?, ?, ?, ?, ?, ?)", db, values);
+          const ride = await dbService.get("SELECT * FROM Rides WHERE rideID = ?", db, insert.lastID);
+          res.send(ride);
+        }
       } catch (err) {
         logger.error(err.message);
         return res.send({
@@ -65,8 +78,10 @@ module.exports = (db, logger) => {
     getRides: async (req, res) => {
       try {
         const { page = 1, size = 5 } = req.query;
-        const rides = await dbService.all("SELECT * FROM Rides LIMIT ?,?", db, [(page - 1) * size, size]);
-        res.send(rides);
+        if (injectionCheck([page, size])) {
+          const rides = await dbService.all("SELECT * FROM Rides LIMIT ?,?", db, [(page - 1) * size, size]);
+          res.send(rides);
+        }
       } catch (err) {
         logger.error(err.message);
         return res.send({
@@ -78,8 +93,10 @@ module.exports = (db, logger) => {
 
     getRideById: async (req, res) => {
       try {
-        const ride = await dbService.get(`SELECT * FROM Rides WHERE rideID="${req.params.id}"`, db);
-        res.send(ride);
+        if (injectionCheck([req.params.id])) {
+          const ride = await dbService.get(`SELECT * FROM Rides WHERE rideID="${req.params.id}"`, db);
+          res.send(ride);
+        }
       } catch (err) {
         logger.error(err.message);
         return res.send({
