@@ -9,8 +9,7 @@
   "scripts": {
     "test": "mocha tests",
     "start": "node index.js",
-    "coverage": "nyc npm run test",
-    "eslint": "eslint src/**"
+    "coverage": "nyc npm run test"
   },
   "pre-push": [
     "test"
