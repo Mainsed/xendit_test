@@ -141,9 +141,9 @@ describe("API tests", () => {
   });
 
   describe("GET /rides", () => {
-    it("should return all rides", (done) => {
+    it("should return 8 or less rides", (done) => {
       request(app)
-        .get("/rides")
+        .get("/rides?page=1&size=8")
         .expect("Content-Type", /json/)
         .expect(200)
         .end((err, res) => {
